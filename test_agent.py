@@ -7,9 +7,9 @@ def run_test():
     # Create the kaggriculture environment with 720 turns (30 days)
     env = make("kaggriculture", configuration={"episodeSteps": 720}, debug=True)
     
-    print("Running simulation (main.py vs random)...")
-    # Run our agent against the built-in random agent
-    env.run([agent, "random"])
+    print("Running simulation (main.py vs starter)...")
+    # Run our agent against the built-in starter agent
+    env.run([agent, "starter"])
     
     # Get the final results
     final = env.steps[-1]
