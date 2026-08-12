@@ -26,11 +26,11 @@ def get_unlocked_tiles(farm):
 
 def agent(obs):
     """
-    Enhanced Baseline Rule-Based Farming Agent for Kaggriculture.
-    - Manages Wheat & Carrot loops across unlocked tiles.
-    - Land Expansion: Buys NE quadrant when money >= 2000.
-    - End-game strategy: Stops seed/hire spending after Day 27 to preserve profit.
-    - Task Priorities: HARVEST > WATER > DIG WEED > PLANT.
+    Optimized High-Performance Farming Agent for Kaggriculture.
+    - Focuses on high-efficiency Wheat & selective Carrot loops.
+    - Unlocks NE quadrant ($1,000) when bankroll >= $2,000 (expanding to 50 tiles).
+    - Hires 2-3 low-cost farm hands daily ($1-$2 cost), quadrupling daily task actions.
+    - End-game strategy: Cuts off seed/hire spending on Day 28+ to save coins for final score.
     """
     player = obs["player"]
     me = obs["farms"][player]
@@ -46,29 +46,30 @@ def agent(obs):
     # ----------------------------------------------------
     market = []
 
-    # Sell everything sitting in the shed
+    # Sell all produce in shed immediately every turn
     for item, qty in private["shed"].items():
         if qty > 0:
             market.append(["SELL", item, qty])
 
-    # Buy land expansion (NE quadrant = $1,000) if we have solid cash reserves (> $2,000)
-    if num_unlocked == 25 and money >= 2000:
+    # Buy land expansion (NE quadrant = $1,000) once we have solid cash reserves (>= $2,000)
+    if num_unlocked == 25 and money >= 2000 and day <= 20:
         market.append(["BUY_LAND"])
 
-    # End-game cutoff: Stop buying seeds/hiring on Day 28+ (since season ends on Day 30)
+    # Active farming phase (Day 0 to 27)
     if day <= 27:
-        # Buy Wheat seeds to maintain a seed buffer (up to 15 seeds for expanded land)
         wheat_seeds = private["seeds"].get("WHEAT", 0)
-        target_seeds = 15 if num_unlocked > 25 else 10
-        if wheat_seeds < target_seeds and money >= 10:
-            needed = target_seeds - wheat_seeds
+        target_wheat = 15 if num_unlocked > 25 else 10
+
+        # Maintain Wheat seed buffer
+        if wheat_seeds < target_wheat and money >= 10:
+            needed = target_wheat - wheat_seeds
             affordable = int(money // 10)
             buy_qty = min(needed, affordable)
             if buy_qty > 0:
                 market.append(["BUY_SEED", "WHEAT", buy_qty])
                 wheat_seeds += buy_qty
 
-        # Hire farm hands (up to 2-3 daily) when cash flow is strong
+        # Hire 2-3 farm hands daily (costing only $1-$2 per hand/day)
         max_hires = 3 if num_unlocked > 25 else 2
         if me.get("hires_today", 0) < max_hires and money >= 100:
             market.append(["HIRE"])
@@ -95,7 +96,7 @@ def agent(obs):
                 weed_tasks.append((x, y))
             elif kind == "PLANT":
                 crop_age = day - tile["planted_day"]
-                # Wheat & Carrot: harvest available at age >= 2
+                # Harvest available at age >= 2
                 if crop_age >= 2:
                     harvest_tasks.append((x, y))
                 elif not tile.get("watered_today", False):
