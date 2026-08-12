@@ -4,31 +4,36 @@ import time
 from kaggle_environments import make
 
 # Import the agents
-from main import agent as main_agent
+from main import agent as current_main_agent
+from v1_main import agent as v1_main_agent
 from new_main import agent as new_main_agent
 
 
 def run_benchmark():
-    print("=" * 60)
-    print("KAGGAGRICULTURE BOT BENCHMARK FRAMEWORK")
-    print("=" * 60)
+    print("=" * 65)
+    print("KAGGAGRICULTURE BOT BENCHMARK FRAMEWORK - HEAD-TO-HEAD SHOWDOWN")
+    print("=" * 65)
 
     competitors = {
-        "main.py (Our Optimized Agent)": main_agent,
+        "main.py (Current v2 Agent)": current_main_agent,
+        "v1_main.py (Previous v1 Agent)": v1_main_agent,
         "new_main.py (Single Farmer Baseline)": new_main_agent,
         "starter (Built-in Starter)": "starter",
         "random (Built-in Random)": "random",
     }
 
     matchups = [
-        # Head-to-head showdown
-        ("main.py (Our Optimized Agent)", "new_main.py (Single Farmer Baseline)"),
-        # Benchmark vs starter
-        ("main.py (Our Optimized Agent)", "starter (Built-in Starter)"),
-        ("new_main.py (Single Farmer Baseline)", "starter (Built-in Starter)"),
-        # Benchmark vs random
-        ("main.py (Our Optimized Agent)", "random (Built-in Random)"),
-        ("new_main.py (Single Farmer Baseline)", "random (Built-in Random)"),
+        # Showdown 1: Current v2 vs Previous v1
+        ("main.py (Current v2 Agent)", "v1_main.py (Previous v1 Agent)"),
+        # Showdown 2: Current v2 vs Single Farmer Baseline
+        ("main.py (Current v2 Agent)", "new_main.py (Single Farmer Baseline)"),
+        # Showdown 3: Previous v1 vs Single Farmer Baseline
+        ("v1_main.py (Previous v1 Agent)", "new_main.py (Single Farmer Baseline)"),
+        # Showdown 4 & 5: vs Built-in Starter
+        ("main.py (Current v2 Agent)", "starter (Built-in Starter)"),
+        ("v1_main.py (Previous v1 Agent)", "starter (Built-in Starter)"),
+        # Showdown 6: vs Built-in Random
+        ("main.py (Current v2 Agent)", "random (Built-in Random)"),
     ]
 
     results = []
@@ -36,7 +41,7 @@ def run_benchmark():
     for idx, (p1_name, p2_name) in enumerate(matchups, 1):
         print(f"\n[Match {idx}/{len(matchups)}] {p1_name}  VS  {p2_name}")
         env = make("kaggriculture", configuration={"episodeSteps": 720}, debug=False)
-        
+
         agent1 = competitors[p1_name]
         agent2 = competitors[p2_name]
 
@@ -100,9 +105,9 @@ def generate_markdown_report(results, filename):
 
     lines.extend([
         "",
-        "## Analysis & Takeaways",
+        "## Strategic Takeaways",
         "",
-        "- **`main.py` vs `new_main.py`**: Compares multi-worker + land expansion strategy against single-farmer baseline.",
+        "- **`main.py (v2)` vs `v1_main.py (v1)`**: Tests land expansion timing and worker scaling optimizations.",
         "- **Multi-Worker Advantage**: Utilizing farm hands ($1/day) significantly increases total crop harvests per day.",
         "- **Land Expansion & End-Game Cutoff**: Expanding land and stopping late seed purchases boosts final score substantially.",
     ])
