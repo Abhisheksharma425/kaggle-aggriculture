@@ -1,0 +1,52 @@
+[
+  {
+    "match_id": 1,
+    "player_1": "main.py (Our Optimized Agent)",
+    "player_2": "new_main.py (Single Farmer Baseline)",
+    "score_1": 9169.0,
+    "score_2": 2670.0,
+    "winner": "main.py (Our Optimized Agent)",
+    "margin": 6499.0,
+    "execution_time_sec": 2.07
+  },
+  {
+    "match_id": 2,
+    "player_1": "main.py (Our Optimized Agent)",
+    "player_2": "starter (Built-in Starter)",
+    "score_1": 9953.0,
+    "score_2": 3487.0,
+    "winner": "main.py (Our Optimized Agent)",
+    "margin": 6466.0,
+    "execution_time_sec": 2.07
+  },
+  {
+    "match_id": 3,
+    "player_1": "new_main.py (Single Farmer Baseline)",
+    "player_2": "starter (Built-in Starter)",
+    "score_1": 2670.0,
+    "score_2": 3487.0,
+    "winner": "starter (Built-in Starter)",
+    "margin": 817.0,
+    "execution_time_sec": 1.3
+  },
+  {
+    "match_id": 4,
+    "player_1": "main.py (Our Optimized Agent)",
+    "player_2": "random (Built-in Random)",
+    "score_1": 8605.0,
+    "score_2": 0.0,
+    "winner": "main.py (Our Optimized Agent)",
+    "margin": 8605.0,
+    "execution_time_sec": 2.09
+  },
+  {
+    "match_id": 5,
+    "player_1": "new_main.py (Single Farmer Baseline)",
+    "player_2": "random (Built-in Random)",
+    "score_1": 2670.0,
+    "score_2": 0.0,
+    "winner": "new_main.py (Single Farmer Baseline)",
+    "margin": 2670.0,
+    "execution_time_sec": 1.29
+  }
+]
