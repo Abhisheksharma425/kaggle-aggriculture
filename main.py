@@ -60,6 +60,10 @@ def agent(obs):
     care_tiles = []
     weeds = []
     empty_tiles = []
+    
+    wheat_plants = 0
+    straw_plants = 0
+    melon_plants = 0
 
     for x, y in unlocked:
         t = tiles[y][x]
@@ -71,6 +75,9 @@ def agent(obs):
                 weeds.append((x, y))
             elif kind == "PLANT":
                 crop = t.get("crop", "WHEAT")
+                if crop == "WHEAT": wheat_plants += 1
+                elif crop == "STRAWBERRY": straw_plants += 1
+                elif crop == "MELON": melon_plants += 1
                 first_yield = CROP_FIRST_YIELD.get(crop, 2)
                 age = day - t["planted_day"]
                 yu = t.get("yield_units", 0)
@@ -142,17 +149,38 @@ def agent(obs):
             market.append(["BUY_ANIMAL", "SHEEP", 1])
             money -= 500
 
+    # --- Buy Strawberry Seeds (High Value for new land) ---
+    straw_seeds = seeds.get("STRAWBERRY", 0)
+    target_straw_total = 0
+    if num_unlocked >= 50 and day <= 18:
+        target_straw_total = 30 # Target 30 strawberry plants
+        
+    straw_deficit = max(0, target_straw_total - (straw_plants + straw_seeds))
+    while straw_deficit > 0 and money >= 100 and len(market) < 8:
+        buy_s = min(straw_deficit, int(money // 100), 10)
+        if buy_s <= 0:
+            break
+        market.append(["BUY_SEED", "STRAWBERRY", buy_s])
+        money -= buy_s * 100
+        straw_deficit -= buy_s
+        straw_seeds += buy_s
+
     # --- Buy wheat seeds ---
     wheat_seeds = seeds.get("WHEAT", 0)
-    # Account for tiles that need pastures
+    # Account for tiles that need pastures and strawberries
     needed_pastures = max(0, animals_in_shed - len(empty_pastures))
-    plant_slots = len(empty_tiles) - needed_pastures
-    target_wheat_seeds = max(0, min(plant_slots, 12))
-    if wheat_seeds < target_wheat_seeds and money >= 10:
-        buy_w = min(target_wheat_seeds - wheat_seeds, int(money // 10), 10)
-        if buy_w > 0:
-            market.append(["BUY_SEED", "WHEAT", buy_w])
-            money -= buy_w * 10
+    plant_slots_for_wheat = max(0, len(empty_tiles) - needed_pastures - straw_seeds)
+    target_wheat_seeds = max(0, plant_slots_for_wheat)
+    
+    # Buy up to 10 seeds per order, allowing multiple orders if we have a large seed deficit.
+    seeds_to_buy = max(0, target_wheat_seeds - wheat_seeds)
+    while seeds_to_buy > 0 and money >= 10 and len(market) < 8: # Leave room for hiring orders
+        buy_w = min(seeds_to_buy, int(money // 10), 10)
+        if buy_w <= 0:
+            break
+        market.append(["BUY_SEED", "WHEAT", buy_w])
+        money -= buy_w * 10
+        seeds_to_buy -= buy_w
 
     # --- Hiring ---
     hires_today = me.get("hires_today", 0)
@@ -249,6 +277,10 @@ def agent(obs):
                 action = ["BUILD_PASTURE"]
                 r_empty.remove(here)
                 need_pastures -= 1
+            elif straw_seeds > 0:
+                action = ["PLANT", "STRAWBERRY"]
+                r_empty.remove(here)
+                straw_seeds -= 1
             elif wheat_seeds > 0:
                 action = ["PLANT", "WHEAT"]
                 r_empty.remove(here)
@@ -327,7 +359,7 @@ def agent(obs):
                     candidates.append((4, t))
 
             # Plant on empty tiles
-            if wheat_seeds > 0 or need_pastures > 0:
+            if (wheat_seeds + straw_seeds) > 0 or need_pastures > 0:
                 for t in r_empty:
                     if t not in assigned:
                         candidates.append((5, t))
