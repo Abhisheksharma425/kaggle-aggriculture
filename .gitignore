@@ -8,3 +8,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Large replay & simulation files
+*.json
+*.html
+*.zip
+replays/
