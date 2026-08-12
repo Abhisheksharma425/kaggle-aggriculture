@@ -26,17 +26,21 @@ def get_unlocked_tiles(farm):
 
 def agent(obs):
     """
-    Optimized High-Performance Farming Agent for Kaggriculture.
-    - Focuses on high-efficiency Wheat & selective Carrot loops.
-    - Unlocks NE quadrant ($1,000) when bankroll >= $2,000 (expanding to 50 tiles).
-    - Hires 2-3 low-cost farm hands daily ($1-$2 cost), quadrupling daily task actions.
-    - End-game strategy: Cuts off seed/hire spending on Day 28+ to save coins for final score.
+    Market-Aware Diversified Crop Farming Agent for Kaggriculture.
+    - Market Price Monitoring:
+        * Checks current market prices (Carrot vs Wheat).
+        * Wheat ($10 seed) is our primary resilient staple crop (`log` market shape).
+        * Carrot ($20 seed) is planted selectively when Carrot market price >= $30 and bank > $500.
+    - Land Expansion: Unlocks NE quadrant ($1,000) when bankroll >= $2,000 before Day 20.
+    - Workforce: Hires 2 low-cost farm hands daily ($1 + $1 = $2 cost), quadrupling daily work actions.
+    - End-Game Saver: Cuts off seed/hire spending on Day 28+ to save final bankroll.
     """
     player = obs["player"]
     me = obs["farms"][player]
     private = obs["private"]
     money = me["money"]
     day = obs["day"]
+    prices = obs["market"].get("prices", {})
 
     unlocked_tiles = get_unlocked_tiles(me)
     num_unlocked = len(unlocked_tiles)
@@ -46,39 +50,52 @@ def agent(obs):
     # ----------------------------------------------------
     market = []
 
-    # Sell all produce in shed immediately every turn
+    # Sell everything sitting in the shed every turn
     for item, qty in private["shed"].items():
         if qty > 0:
             market.append(["SELL", item, qty])
 
-    # Buy land expansion (NE quadrant = $1,000) once we have solid cash reserves (>= $2,000)
+    # Land Expansion: Buy NE quadrant ($1,000) when money >= $2,000 before Day 20
     if num_unlocked == 25 and money >= 2000 and day <= 20:
         market.append(["BUY_LAND"])
 
     # Active farming phase (Day 0 to 27)
     if day <= 27:
-        wheat_seeds = private["seeds"].get("WHEAT", 0)
-        target_wheat = 15 if num_unlocked > 25 else 10
+        seeds = private["seeds"]
+        wheat_seeds = seeds.get("WHEAT", 0)
+        carrot_seeds = seeds.get("CARROT", 0)
 
-        # Maintain Wheat seed buffer
-        if wheat_seeds < target_wheat and money >= 10:
-            needed = target_wheat - wheat_seeds
-            affordable = int(money // 10)
-            buy_qty = min(needed, affordable)
-            if buy_qty > 0:
-                market.append(["BUY_SEED", "WHEAT", buy_qty])
-                wheat_seeds += buy_qty
+        target_seeds = 15 if num_unlocked > 25 else 10
+        carrot_price = prices.get("CARROT", 35)
 
-        # Hire 2-3 farm hands daily (costing only $1-$2 per hand/day)
-        max_hires = 3 if num_unlocked > 25 else 2
-        if me.get("hires_today", 0) < max_hires and money >= 100:
+        # Market-aware Carrot buying: Only buy Carrots if price is profitable (>= $30) and we have surplus cash (> $500)
+        if carrot_price >= 30 and money >= 500 and carrot_seeds < 5:
+            needed_c = 5 - carrot_seeds
+            buy_c = min(needed_c, int(money // 20))
+            if buy_c > 0:
+                market.append(["BUY_SEED", "CARROT", buy_c])
+                carrot_seeds += buy_c
+
+        # Primary Wheat seed buffer
+        if wheat_seeds < target_seeds and money >= 10:
+            needed_w = target_seeds - wheat_seeds
+            buy_w = min(needed_w, int(money // 10))
+            if buy_w > 0:
+                market.append(["BUY_SEED", "WHEAT", buy_w])
+                wheat_seeds += buy_w
+
+        # Hire 2 farm hands daily ($1 + $1 = $2 total daily cost)
+        if me.get("hires_today", 0) < 2 and money >= 100:
             market.append(["HIRE"])
 
     # ----------------------------------------------------
     # 2. UNIT ASSIGNMENTS (Farmer + Hired Hands)
     # ----------------------------------------------------
     units = [me["farmer"]] + me.get("hands", [])
-    wheat_seeds = private["seeds"].get("WHEAT", 0)
+
+    seeds = private["seeds"]
+    wheat_seeds = seeds.get("WHEAT", 0)
+    carrot_seeds = seeds.get("CARROT", 0)
 
     harvest_tasks = []
     water_tasks = []
@@ -96,7 +113,7 @@ def agent(obs):
                 weed_tasks.append((x, y))
             elif kind == "PLANT":
                 crop_age = day - tile["planted_day"]
-                # Harvest available at age >= 2
+                # Wheat & Carrot first yield day is 2
                 if crop_age >= 2:
                     harvest_tasks.append((x, y))
                 elif not tile.get("watered_today", False):
@@ -120,10 +137,15 @@ def agent(obs):
         elif (ux, uy) in weed_tasks:
             action = ["DIG"]
             weed_tasks.remove((ux, uy))
-        elif (ux, uy) in empty_tiles and wheat_seeds > 0:
-            action = ["PLANT", "WHEAT"]
-            empty_tiles.remove((ux, uy))
-            wheat_seeds -= 1
+        elif (ux, uy) in empty_tiles:
+            if carrot_seeds > 0:
+                action = ["PLANT", "CARROT"]
+                empty_tiles.remove((ux, uy))
+                carrot_seeds -= 1
+            elif wheat_seeds > 0:
+                action = ["PLANT", "WHEAT"]
+                empty_tiles.remove((ux, uy))
+                wheat_seeds -= 1
 
         # Priority 2: Not on task tile -> Move toward closest unassigned target
         if action is None:
@@ -137,7 +159,7 @@ def agent(obs):
             for t in weed_tasks:
                 if t not in assigned_targets:
                     candidate_targets.append((2, t))
-            if wheat_seeds > 0:
+            if (wheat_seeds + carrot_seeds) > 0:
                 for t in empty_tiles:
                     if t not in assigned_targets:
                         candidate_targets.append((3, t))

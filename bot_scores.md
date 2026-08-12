@@ -6,12 +6,12 @@ This file tracks and compares match performances across different bot strategies
 
 | Match ID | Player 1 | Player 2 | Score (P1 vs P2) | Winner | Margin | Duration |
 | :---: | :--- | :--- | :---: | :--- | :---: | :---: |
-| 1 | main.py (Current v2 Agent) | v1_main.py (Previous v1 Agent) | 5450 vs 5990 | **v1_main.py (Previous v1 Agent)** | +540 | 2.92s |
-| 2 | main.py (Current v2 Agent) | new_main.py (Single Farmer Baseline) | 9054 vs 2670 | **main.py (Current v2 Agent)** | +6384 | 2.38s |
-| 3 | v1_main.py (Previous v1 Agent) | new_main.py (Single Farmer Baseline) | 9571 vs 2670 | **v1_main.py (Previous v1 Agent)** | +6901 | 2.37s |
-| 4 | main.py (Current v2 Agent) | starter (Built-in Starter) | 7328 vs 3514 | **main.py (Current v2 Agent)** | +3814 | 2.28s |
-| 5 | v1_main.py (Previous v1 Agent) | starter (Built-in Starter) | 7150 vs 3507 | **v1_main.py (Previous v1 Agent)** | +3643 | 2.5s |
-| 6 | main.py (Current v2 Agent) | random (Built-in Random) | 8140 vs 0 | **main.py (Current v2 Agent)** | +8140 | 2.51s |
+| 1 | main.py (Current v2 Agent) | v1_main.py (Previous v1 Agent) | 6720 vs 6593 | **main.py (Current v2 Agent)** | +127 | 2.91s |
+| 2 | main.py (Current v2 Agent) | new_main.py (Single Farmer Baseline) | 8743 vs 2670 | **main.py (Current v2 Agent)** | +6073 | 2.33s |
+| 3 | v1_main.py (Previous v1 Agent) | new_main.py (Single Farmer Baseline) | 9571 vs 2670 | **v1_main.py (Previous v1 Agent)** | +6901 | 2.41s |
+| 4 | main.py (Current v2 Agent) | starter (Built-in Starter) | 6974 vs 3427 | **main.py (Current v2 Agent)** | +3547 | 2.37s |
+| 5 | v1_main.py (Previous v1 Agent) | starter (Built-in Starter) | 9953 vs 3501 | **v1_main.py (Previous v1 Agent)** | +6452 | 2.44s |
+| 6 | main.py (Current v2 Agent) | random (Built-in Random) | 8359 vs 0 | **main.py (Current v2 Agent)** | +8359 | 2.37s |
 
 ## Strategic Takeaways
 
