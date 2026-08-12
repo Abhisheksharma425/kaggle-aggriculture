@@ -2,7 +2,9 @@ import json
 import os
 import webbrowser
 from kaggle_environments import make
-from main import agent
+
+from main import agent as main_agent
+from v1_main import agent as v1_agent
 
 
 def run_test():
@@ -10,18 +12,28 @@ def run_test():
     # Create the kaggriculture environment with 720 turns (30 days)
     env = make("kaggriculture", configuration={"episodeSteps": 720}, debug=True)
 
-    print("Running simulation (main.py vs starter)...")
-    # Run our agent against the built-in starter agent
-    env.run([agent, "starter"])
+    print("\n==================================================")
+    print(" Running Simulation: New Bot (main.py) VS Previous Bot (v1_main.py)")
+    print("==================================================\n")
+
+    # Run New Bot (main.py) vs Previous Bot (v1_main.py)
+    env.run([main_agent, v1_agent])
 
     # Get the final results
     final = env.steps[-1]
-    print("\n--- Match Results ---")
-    for i, s in enumerate(final):
-        reward = s.get("reward", 0)
-        status = s.get("status", "UNKNOWN")
-        name = "Our Agent" if i == 0 else "Starter Agent"
-        print(f"Player {i} ({name}): reward={reward}, status={status}")
+    print("\n--- Final Match Results ---")
+    score_p0 = final[0].get("reward", 0)
+    score_p1 = final[1].get("reward", 0)
+
+    print(f"  Player 0 (New Bot - main.py)      : {score_p0} coins")
+    print(f"  Player 1 (Previous Bot - v1_main.py): {score_p1} coins")
+
+    if score_p0 > score_p1:
+        print(f"\n  WINNER: New Bot (main.py) by +{score_p0 - score_p1} coins!")
+    elif score_p1 > score_p0:
+        print(f"\n  WINNER: Previous Bot (v1_main.py) by +{score_p1 - score_p0} coins!")
+    else:
+        print("\n  TIE MATCH!")
 
     # 1. Save JSON replay file
     replay_json_path = "replay.json"
@@ -40,7 +52,7 @@ def run_test():
     print(f"Saved simulation HTML to {os.path.abspath(html_path)}")
 
     # 3. Open in browser automatically
-    print("Opening simulation visualizer in web browser...")
+    print("\nOpening interactive simulation visualizer in web browser...")
     webbrowser.open("file://" + os.path.abspath(html_path))
 
 
