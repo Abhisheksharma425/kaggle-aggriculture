@@ -1,20 +1,32 @@
-# 🏆 Bot Benchmark & Score Tracker Report
+# Kaggriculture Bot Score Tracker
 
-This file tracks and compares match performances across different bot strategies.
+Last Updated: 2026-08-12
 
-## Matchup Results Overview
+---
 
-| Match ID | Player 1 | Player 2 | Score (P1 vs P2) | Winner | Margin | Duration |
-| :---: | :--- | :--- | :---: | :--- | :---: | :---: |
-| 1 | main.py (Current v2 Agent) | v1_main.py (Previous v1 Agent) | 1936 vs 6272 | **v1_main.py (Previous v1 Agent)** | +4336 | 2.61s |
-| 2 | main.py (Current v2 Agent) | new_main.py (Single Farmer Baseline) | 4167 vs 2670 | **main.py (Current v2 Agent)** | +1497 | 1.86s |
-| 3 | v1_main.py (Previous v1 Agent) | new_main.py (Single Farmer Baseline) | 8257 vs 2670 | **v1_main.py (Previous v1 Agent)** | +5587 | 2.07s |
-| 4 | main.py (Current v2 Agent) | starter (Built-in Starter) | 3200 vs 3511 | **starter (Built-in Starter)** | +311 | 1.82s |
-| 5 | v1_main.py (Previous v1 Agent) | starter (Built-in Starter) | 7549 vs 3487 | **v1_main.py (Previous v1 Agent)** | +4062 | 2.1s |
-| 6 | main.py (Current v2 Agent) | random (Built-in Random) | 3593 vs 0 | **main.py (Current v2 Agent)** | +3593 | 1.9s |
+## 🏆 Head-to-Head Comparison: `rank2_agent.py` vs `main.py`
 
-## Strategic Takeaways
+| Match | Rank 2 Agent (`rank2_agent.py`) | Current Main Bot (`main.py`) | Winner | Score Margin |
+|---|---|---|---|---|
+| **Match 1** | 14,425 coins | 51,054 coins | **Current Main** | +36,629 coins |
+| **Match 2** | 17,636 coins | 62,342 coins | **Current Main** | +44,706 coins |
+| **Match 3** | 15,625 coins | 53,027 coins | **Current Main** | +37,402 coins |
+| **AVERAGE** | **15,895 coins** | **55,474 coins** | **Current Main** | **+39,579 coins** |
 
-- **`main.py (v2)` vs `v1_main.py (v1)`**: Tests land expansion timing and worker scaling optimizations.
-- **Multi-Worker Advantage**: Utilizing farm hands ($1/day) significantly increases total crop harvests per day.
-- **Land Expansion & End-Game Cutoff**: Expanding land and stopping late seed purchases boosts final score substantially.
+---
+
+## 🔍 Key Findings & Insights
+
+1. **Why `main.py` dominates (`55.4k` vs `15.8k`)**:
+   * **Workforce Scaling Advantage**: `main.py` uses 7 hired farm hands. 8 units acting every turn can water, harvest, and feed across 50-100 tiles simultaneously.
+   * **Single Farmer Bottleneck in `rank2_agent.py`**: Without hired hands, 1 single farmer gets overwhelmed trying to cover 100 tiles. Crops rot or go unwatered before the farmer can reach them.
+
+2. **Best Takeaways to Merge into `main.py`**:
+   * We can combine **Workforce Scaling** from `main.py` with **Day-0 Melon Launchpad & Ongoing Strawberries** from `rank2_agent.py` for an even higher score!
+
+---
+
+## 📁 File References
+* **Rank 2 Strategy Agent**: [rank2_agent.py](file:///d:/Old%20laptop%20data/Python%20Haier/Python%20FIles/Kaggle%20Farm/rank2_agent.py)
+* **Current Main Bot**: [main.py](file:///d:/Old%20laptop%20data/Python%20Haier/Python%20FIles/Kaggle%20Farm/main.py)
+* **Comparison Script**: [compare_bots.py](file:///d:/Old%20laptop%20data/Python%20Haier/Python%20FIles/Kaggle%20Farm/compare_bots.py)

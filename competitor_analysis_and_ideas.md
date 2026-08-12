@@ -1,68 +1,49 @@
-# Competitor Analysis & Rank 1 Master Strategy Breakdown
+# Rank 2 Competitor Analysis: Kawashige (カワシギ)
 
-## Executive Summary
-
-We downloaded and analyzed the complete step-by-step game trajectory of the **#1 Ranked Competitor on Kaggle**, **Kaito Fukami** (Leaderboard Rank #1, Rating 3,187.7), from **Episode ID: 91924750**.
-
-In this match, Kaito Fukami achieved a staggering **169,048 coins** (compared to standard baseline agents scoring ~3,500 coins).
-
----
-
-## 1. Day-by-Day Financial Progression (Rank 1 Kaito Fukami)
-
-```
-+-----------------------------------------------------------------------------------+
-|               KAITO FUKAMI (RANK 1) EXPONENTIAL WEALTH PROGRESSION               |
-+-----------------------------------------------------------------------------------+
-|  DAY     | BANK BALANCE  | LAND UNLOCKED  | HIRED HANDS/DAY | KEY MILESTONE   |
-+----------+---------------+----------------+-----------------+-----------------+
-|  Day 0   | $3,000        | 1 Quad (25)    | 0 Hands         | Initial Setup   |
-|  Day 3   | $193          | 1 Quad (25)    | 1 Hand          | First Yield     |
-|  Day 6   | $569          | 2 Quads (50)   | 2 Hands         | Buy NE Quadrant |
-|  Day 8   | $1,172        | 2 Quads (50)   | 3 Hands         | 1st Cow & Pasture|
-|  Day 10  | $2,892        | 3 Quads (75)   | 4 Hands         | Buy SW Quadrant |
-|  Day 12  | $7,273        | 3 Quads (75)   | 7 Hands         | Scale Workforce |
-|  Day 14  | $15,070       | 3 Quads (75)   | 10 Hands        | $15k Threshold  |
-|  Day 16  | $23,365       | 3 Quads (75)   | 12 Hands        | $23k Threshold  |
-|  Day 18  | $35,285       | 3 Quads (75)   | 14 Hands        | Peak Workforce  |
-|  Day 20  | $56,914       | 3 Quads (75)   | 14 Hands        | $56k Threshold  |
-|  Day 24  | $103,365      | 3 Quads (75)   | 14 Hands        | $100k Threshold |
-|  Day 29  | $169,048      | 3 Quads (75)   | 0 Hands         | Final Harvest   |
-+-----------------------------------------------------------------------------------+
-```
+* **Competitor Name:** Kawashige (カワシギ)
+* **Leaderboard Rank:** #2 (Rating: 3166.4)
+* **Analyzed Episode ID:** `91940849`
+* **Episode Final Score:** **97,078 coins**
 
 ---
 
-## 2. The 4 Secret Pillars of Kaito Fukami's 169k Strategy
+## 🎯 Key Strategic Pillars
 
-### Pillar 1: High-Value Livestock Array (Cow + Milk & Sheep + Wool) 🐄🐑
-- **Cows (9 Total)**: Milk yields every 2 days at **$160 base price**. Total Milk harvested and sold = **241 Milk units**.
-- **Sheep (4 Total)**: Wool yields every 3 days at **$200 base price**. Total Wool harvested and sold = **132 Wool units**.
-- **Fertilizer Synergy**: Collected and sold **235 Fertilizer units** ($100 base price) generated passively by livestock!
+### 1. Zero Hired Hands (`Hands: 0`)
+* **Surprising Discovery:** Kawashige hires **0 farm hands** across the entire 30-day game.
+* **Why it works:** Hiring workers costs Fibonacci money ($1, $1, $2, $3, $5, $8, $13...) *every day*. By running a single main farmer with clean pathing, they save ~$20,000+ in hiring costs over the season.
 
-### Pillar 2: Market Feed Buying Arbitrage (`BUY_PRODUCT WHEAT`) 🌾
-- Instead of wasting valuable farm land growing low-cost Wheat to feed livestock, Kaito Fukami **bought 221 units of Wheat directly from the market** (`BUY_PRODUCT WHEAT 1`).
-- This kept 75 farm tiles 100% dedicated to high-value Milk ($160), Wool ($200), Melon ($250), and Strawberry ($120)!
+### 2. Day-0 Melon Explosion ($2,498 → $16,409 Jump on Day 11)
+* On **Day 0**, Kawashige buys **12 Melon seeds** ($80 each) alongside 2 Cows and 2 Sheep.
+* Melons mature on Day 10–12 and sell for **$250 each**.
+* On Day 11, when the melon batch matures, bankroll explodes from **$2,498 to $16,409** in a single day!
 
-### Pillar 3: Massive Workforce Scaling (10 to 14 Farm Hands/Day) 👨‍🌾
-- On Days 0–6: Hired 1–2 hands per day.
-- On Days 12–28: Scaled up to **10–14 farm hands every single day**!
-- **Why this exploded earnings**:
-  - Hiring 14 hands costs ~$300/day.
-  - But 14 hands generate **360 action turns per day**, allowing workers to harvest, feed, and water 75 tiles simultaneously.
-  - Daily income jumped from $1,000/day to **over $15,000/day**!
+### 3. Mass Strawberry Engine (34 Ongoing Plants)
+* Reinvests early Melon cash into **30–34 Strawberry plants** ($100 seed cost).
+* **Why Strawberry?** Strawberry is an *ongoing crop*. Once mature on Day 10, 34 plants produce 34–68 Strawberries ($120 base price) every 2 days for the rest of the game without replanting!
+* Generates an automatic **$4,000 – $8,000 daily income** in mid-to-late game.
 
-### Pillar 4: Precision Land Expansion Schedule 🗺️
-- **Day 6**: Unlocked Quadrant 2 (NE, 50 tiles) when cash reached ~$600.
-- **Day 10**: Unlocked Quadrant 3 (SW, 75 tiles) when cash reached ~$2,800.
-- Stopped expanding at 75 tiles, keeping Quadrant 4 locked to save $4,000 capital.
+### 4. Fast Quadrant Unlocking Schedule
+* **Day 7:** Unlocks Quadrant 2 (NE) for $1,000.
+* **Day 12:** Unlocks Quadrant 3 (SW) for $2,000.
+* **Day 13:** Unlocks Quadrant 4 (SE) for $4,000.
+* By Day 13, all 100 tiles are unlocked: 18 Pastures (6 Cows + 12 Sheep), 34 Strawberries, and Wheat.
+
+### 5. Fertilizer Cash-In
+* Collects fertilizer daily from Cows and Sheep.
+* Sells fertilizer in bulk batches (18 units = $1,800 free cash).
 
 ---
 
-## 3. Implementation Roadmap for Our Agent
+## 📈 Timeline Summary (Episode 91940849)
 
-To upgrade our agent to reach **100,000+ coins**, we will implement:
-1. **Market Wheat Feed Purchases** for animals (`BUY_PRODUCT WHEAT`).
-2. **Cow & Sheep Livestock Engine** (Build Pastures, Buy Cows/Sheep, Harvest Milk & Wool).
-3. **Late-Game Mass Workforce Scaling** (Scale to 8-12 hired hands once daily revenue exceeds $2,000).
-4. **Targeted Land Expansion**: Day 6 NE unlock, Day 10 SW unlock.
+| Day | Money | Land | Pastures (Cows/Sheep) | Crops | Strategy Event |
+|---|---|---|---|---|---|
+| **Day 0** | $3,000 | 1 Quad (NW) | 4 (2 Cows, 2 Sheep) | 12 Melon, 7 Wheat | Day 0 Melon + Livestock Blitz |
+| **Day 7** | $1,241 | 2 Quads (NE) | 8 (4 Cows, 2 Sheep) | 14 Melon, 4 Straw | Unlocks NE Quadrant ($1,000) |
+| **Day 11**| **$16,409** | 2 Quads | 12 (6 Cows, 6 Sheep) | 8 Melon, 11 Straw | **Melon harvest payout!** |
+| **Day 12**| $13,352 | 3 Quads (SW) | 14 (6 Cows, 8 Sheep) | 30 Straw, 18 Wheat | Unlocks SW Quadrant ($2,000) |
+| **Day 13**| $10,232 | 4 Quads (SE) | 17 (6 Cows, 9 Sheep) | 33 Straw, 21 Wheat | Unlocks SE Quadrant ($4,000) |
+| **Day 20**| $54,358 | 4 Quads | 18 (6 Cows, 12 Sheep) | 33 Straw, 40 Wheat | Strawberry engine peak |
+| **Day 30**| **$97,078** | 4 Quads | 18 (6 Cows, 12 Sheep) | 33 Straw, 14 Wheat | **Final Score** |
+
